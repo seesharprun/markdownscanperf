@@ -1,5 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
+WORKDIR /source
+
 COPY . ./
 RUN dotnet publish src/worker/Examples.MarkdownLinkScanWorker.csproj --configuration Release --output out --no-self-contained
 
@@ -8,6 +10,8 @@ LABEL com.github.actions.description="Scans a folder of Markdown files for hyper
 
 FROM mcr.microsoft.com/dotnet/runtime:9.0
 
-COPY --from=build /out .
+WORKDIR /app
 
-ENTRYPOINT [ "dotnet", "/Examples.MarkdownLinkScanWorker.dll" ]
+COPY --from=build /source/out .
+
+ENTRYPOINT [ "dotnet", "Examples.MarkdownLinkScanWorker.dll" ]
