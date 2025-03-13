@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Examples.MarkdownLinkScanWorker.Services;
 
 internal sealed class MarkdigScanService(
@@ -63,7 +65,7 @@ internal sealed class MarkdigScanService(
                 continue;
             }
 
-            if (Uri.TryCreate(link.Url, UriKind.Absolute, out _))
+            if (Uri.IsWellFormedUriString(link.Url, UriKind.Absolute))
             {
                 yield return link.Url;
             }
@@ -71,7 +73,7 @@ internal sealed class MarkdigScanService(
 
         foreach (AutolinkInline link in markdown.Descendants<AutolinkInline>())
         {
-            if (Uri.TryCreate(link.Url, UriKind.Absolute, out _))
+            if (Uri.IsWellFormedUriString(link.Url, UriKind.Absolute))
             {
                 yield return link.Url;
             }
