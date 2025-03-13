@@ -4,6 +4,10 @@ global using Actions.Core.Extensions;
 
 global using Humanizer;
 
+global using Markdig;
+global using Markdig.Syntax;
+global using Markdig.Syntax.Inlines;
+
 global using System.CommandLine;
 
 global using Examples.MarkdownLinkScanWorker.Interfaces;

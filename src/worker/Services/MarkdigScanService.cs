@@ -5,15 +5,70 @@ internal sealed class MarkdigScanService(
     Configuration configuration
 ) : IScanService
 {
+    readonly MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
+        .UsePreciseSourceLocation()
+        .UseAdvancedExtensions()
+        .Build();
+
     public async IAsyncEnumerable<string> GetHyperlinksAsync()
     {
         logger.LogMarkdigScanStarted(configuration.Path);
 
-        await Task.CompletedTask;
+        string folder = configuration.Path;
 
-        foreach (var link in new string[] { "https://github.com/xoofx/markdig", "https://www.nuget.org/packages/markdig/" })
+        if (!Directory.Exists(folder))
         {
-            yield return link;
+            yield break;
+        }
+
+        IEnumerable<string> files = Directory.EnumerateFiles(folder, "*.md", SearchOption.AllDirectories);
+
+        await foreach (string match in ProcessFilesAsync(files))
+        {
+            yield return match;
+        }
+    }
+
+    private async IAsyncEnumerable<string> ProcessFilesAsync(IEnumerable<string> files)
+    {
+        foreach (var file in files)
+        {
+            await foreach (string match in ProcessFileAsync(file))
+            {
+                yield return match;
+            }
+        }
+    }
+
+    private async IAsyncEnumerable<string> ProcessFileAsync(string file)
+    {
+        string content = await File.ReadAllTextAsync(file);
+
+        MarkdownDocument markdown = Markdown.Parse(content, pipeline);
+
+        IEnumerable<string> matches = ProcessHyperlinks(markdown);
+
+        foreach (string match in matches)
+        {
+            yield return match;
+        }
+    }
+
+    private static IEnumerable<string> ProcessHyperlinks(MarkdownDocument markdown)
+    {
+        foreach (LinkInline link in markdown.Descendants<LinkInline>())
+        {
+            if (link.IsImage || link.Url is null)
+            {
+                continue;
+            }
+
+            yield return link.Url;
+        }
+
+        foreach (AutolinkInline link in markdown.Descendants<AutolinkInline>())
+        {
+            yield return link.Url;
         }
     }
 }
