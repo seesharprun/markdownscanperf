@@ -16,7 +16,7 @@ outputs:
     description: Summary of the results from the execution of the application.
 runs:
   using: docker
-  image: Dockerfile
+  image: docker://ghcr.io/seesharprun/markdownscanperf:main
   args:
     - '--path'
     - ${{ inputs.path }}
