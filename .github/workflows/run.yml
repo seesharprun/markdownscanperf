@@ -7,6 +7,11 @@ on:
         default: microsoftdocs/data-api-builder-docs
         required: true
         type: string
+      output-hyperlinks:
+        description: Output the hyperlinks found in the markdown files.
+        default: false
+        required: true
+        type: boolean
 jobs:
   run-scanner:
     name: Run hyperlink scanner
@@ -34,10 +39,10 @@ jobs:
         with:
           path: ./target-repository
           tool: markdig
-          outputHyperlinks: false
+          outputHyperlinks: ${{ github.event.inputs.output-hyperlinks || false }}
       - name: Run hyperlink scanner
         uses: ./
         with:
           path: ./target-repository
           tool: regex
-          outputHyperlinks: false
+          outputHyperlinks: ${{ github.event.inputs.output-hyperlinks || false }}
