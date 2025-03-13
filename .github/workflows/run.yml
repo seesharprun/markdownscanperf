@@ -23,7 +23,12 @@ jobs:
           path: target-repository
       - name: Write summary header
         run: |
-          echo "## Measurement summary :chart_with_upwards_trend:\n\nHere's a summary of the hyperlink scan results\n" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "## Measurement summary :chart_with_upwards_trend:"
+            echo " "
+            echo "Here's a summary of the hyperlink scan results"
+            echo " " 
+          } >> $GITHUB_STEP_SUMMARY
       - name: Run hyperlink scanner
         uses: ./
         with:
