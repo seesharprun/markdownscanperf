@@ -17,14 +17,18 @@ internal sealed class MarkdownResultsService(
 
         logger.LogStopwatchInformation(elapsedTime);
 
+        List<string> uniqueHyperlinks = [.. hyperlinks.Distinct().Order()];
+
         coreService.Summary.AddNewLine();
         coreService.Summary.AddMarkdownHeading($"{configuration.Tool}", level: 3);
         coreService.Summary.AddNewLine();
-        coreService.Summary.AddRawMarkdown($"The following hyperlinks were found in the markdown files:");
+        coreService.Summary.AddRawMarkdown($"The following unique absolute hyperlinks were found in the markdown files:");
         coreService.Summary.AddNewLine();
         coreService.Summary.AddNewLine();
-        coreService.Summary.AddMarkdownList(hyperlinks, ordered: true);
+        coreService.Summary.AddMarkdownList(uniqueHyperlinks, ordered: true);
         coreService.Summary.AddNewLine();
+        coreService.Summary.AddMarkdownQuote($"Total hyperlinks: {hyperlinks.Count}");
+        coreService.Summary.AddMarkdownQuote($"Unique hyperlinks: {uniqueHyperlinks.Count}");
         coreService.Summary.AddMarkdownQuote($"Elapsed time: {elapsedTime.Humanize(3)}");
 
         if (Summary.IsAvailable)

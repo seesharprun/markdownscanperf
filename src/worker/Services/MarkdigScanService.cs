@@ -63,12 +63,18 @@ internal sealed class MarkdigScanService(
                 continue;
             }
 
-            yield return link.Url;
+            if (Uri.TryCreate(link.Url, UriKind.Absolute, out _))
+            {
+                yield return link.Url;
+            }
         }
 
         foreach (AutolinkInline link in markdown.Descendants<AutolinkInline>())
         {
-            yield return link.Url;
+            if (Uri.TryCreate(link.Url, UriKind.Absolute, out _))
+            {
+                yield return link.Url;
+            }
         }
     }
 }
