@@ -1,0 +1,27 @@
+name: Scan hyperlinks in Markdown files
+on:
+  workflow_dispatch:
+    inputs:
+      target-repository:
+        description: The repository to run the scanner on in "owner/repo" format
+        default: microsoftdocs/data-api-builder-docs
+        required: true
+        type: string
+jobs:
+  run-scanner:
+    name: Run hyperlink scanner
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Checkout target repository [${{ github.event.inputs.target-repository || 'microsoftdocs/data-api-builder-docs' }}]
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.inputs.target-repository || 'microsoftdocs/data-api-builder-docs' }}
+          path: target-repository
+      - name: Run GitHub hyperlink parser action
+        uses: ./
+        with:
+          targetPath: ./target-repository

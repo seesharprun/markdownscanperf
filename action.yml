@@ -1,0 +1,24 @@
+name: Markdown link scanner
+description: Scans a folder of Markdown files for hyperlinks.
+branding:
+  icon: 'layers'
+  color: 'purple'
+inputs:
+  path:
+    description: The path to the file or directory to scan.
+    required: true
+  tool:
+    description: The tool to use for scanning. Allowed values are 'markdig' and 'regex'.
+    required: true
+    default: 'markdig'
+outputs:
+  markdown-summary:
+    description: Summary of the results from the execution of the application.
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+    - '--path'
+    - ${{ inputs.path }}
+    - '--tool'
+    - ${{ inputs.tool }}
