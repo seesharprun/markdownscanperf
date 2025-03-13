@@ -10,4 +10,4 @@ FROM mcr.microsoft.com/dotnet/runtime:9.0
 
 COPY --from=build /out .
 
-ENTRYPOINT [ "dotnet", "Examples.MarkdownLinkScanWorker.dll" ]
+ENTRYPOINT [ "dotnet", "/Examples.MarkdownLinkScanWorker.dll" ]
