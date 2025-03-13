@@ -21,7 +21,13 @@ jobs:
         with:
           repository: ${{ github.event.inputs.target-repository || 'microsoftdocs/data-api-builder-docs' }}
           path: target-repository
-      - name: Run GitHub hyperlink parser action
+      - name: Run hyperlink scanner
         uses: ./
         with:
-          targetPath: ./target-repository
+          path: ./target-repository
+          tool: markdig
+      - name: Run hyperlink scanner
+        uses: ./
+        with:
+          path: ./target-repository
+          tool: regex

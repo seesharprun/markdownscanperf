@@ -5,7 +5,8 @@ namespace Examples.MarkdownLinkScanWorker.Services;
 
 internal sealed class MarkdownResultsService(
     ILogger<MarkdownResultsService> logger,
-    ICoreService coreService
+    ICoreService coreService,
+    Configuration configuration
 ) : IResultsService
 {
     public async Task SaveResultsAsync(IAsyncEnumerable<string> results, TimeSpan elapsedTime)
@@ -21,10 +22,10 @@ internal sealed class MarkdownResultsService(
 
         logger.LogHyperlinks($"{string.Join(Environment.NewLine, $"- {hyperlinks}")}");
 
-        coreService.Summary.AddMarkdownHeading("Hyperlinks found", level: 2);
+        coreService.Summary.AddMarkdownSeparator();
+        coreService.Summary.AddMarkdownHeading($"{configuration.Tool} - {configuration.Path}", level: 3);
         coreService.Summary.AddRawMarkdown("The following hyperlinks were found in the markdown files:");
         coreService.Summary.AddMarkdownList(hyperlinks, ordered: true);
-        coreService.Summary.AddMarkdownSeparator();
         coreService.Summary.AddMarkdownQuote("Elapsed time: {Elapsed:c}");
     }
 }
