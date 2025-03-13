@@ -34,7 +34,7 @@ jobs:
           {
             echo "## Measurement summary :chart_with_upwards_trend:"
             echo " "
-            echo "Here's a summary of the hyperlink scan results for ${{ env.TARGET_REPOSITORY}}"
+            echo "*Here's a summary of the hyperlink scan results for [${{ env.TARGET_REPOSITORY}}](https://github.com/${{ env.TARGET_REPOSITORY}}).*"
             echo " " 
           } >> $GITHUB_STEP_SUMMARY
       - name: Run hyperlink scanner
