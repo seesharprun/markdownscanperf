@@ -2,5 +2,5 @@ namespace Examples.MarkdownLinkScanWorker.Interfaces;
 
 internal interface IResultsService
 {
-    Task SaveResultsAsync(IAsyncEnumerable<string> results, TimeSpan elapsedTime);
+    Task SaveResultsAsync(IList<string> hyperlinks, TimeSpan elapsedTime);
 }

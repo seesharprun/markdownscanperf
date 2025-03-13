@@ -11,6 +11,10 @@ inputs:
     description: The tool to use for scanning. Allowed values are 'markdig' and 'regex'.
     required: true
     default: 'markdig'
+  outputHyperlinks:
+    description: Output the hyperlinks found in the markdown files.
+    required: false
+    default: 'false'
 outputs:
   markdown-summary:
     description: Summary of the results from the execution of the application.
@@ -22,3 +26,5 @@ runs:
     - ${{ inputs.path }}
     - '--tool'
     - ${{ inputs.tool }}
+    - '--output-hyperlinks'
+    - ${{ inputs.outputHyperlinks }}

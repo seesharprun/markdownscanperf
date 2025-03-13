@@ -27,18 +27,30 @@ Option<Tool> toolOption = new(
     Arity = ArgumentArity.ExactlyOne
 };
 
+Option<bool> outputHyperlinksOption = new(
+    name: "--output-hyperlinks",
+    description: "Output the hyperlinks found in the markdown files.",
+    getDefaultValue: () => false
+)
+{
+    IsRequired = false,
+    Arity = ArgumentArity.ExactlyOne,
+};
+
 RootCommand command =
 [
     pathOption,
-    toolOption
+    toolOption,
+    outputHyperlinksOption
 ];
 
-command.SetHandler(async (path, tool) =>
+command.SetHandler(async (path, tool, outputHyperlinks) =>
 {
     builder.Services.AddSingleton(new Configuration()
     {
         Path = path,
-        Tool = tool
+        Tool = tool,
+        OutputHyperlinks = outputHyperlinks
     });
 
     builder.Services.AddScoped<IScanService>((provider) =>
@@ -54,7 +66,7 @@ command.SetHandler(async (path, tool) =>
     IHost host = builder.Build();
 
     await host.RunAsync();
-}, pathOption, toolOption);
+}, pathOption, toolOption, outputHyperlinksOption);
 
 await command.InvokeAsync(args);
 

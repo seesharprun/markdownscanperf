@@ -34,8 +34,10 @@ jobs:
         with:
           path: ./target-repository
           tool: markdig
+          outputHyperlinks: false
       - name: Run hyperlink scanner
         uses: ./
         with:
           path: ./target-repository
           tool: regex
+          outputHyperlinks: false

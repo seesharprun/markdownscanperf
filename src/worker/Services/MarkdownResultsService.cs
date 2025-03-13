@@ -6,26 +6,22 @@ internal sealed class MarkdownResultsService(
     Configuration configuration
 ) : IResultsService
 {
-    public async Task SaveResultsAsync(IAsyncEnumerable<string> results, TimeSpan elapsedTime)
+    public async Task SaveResultsAsync(IList<string> hyperlinks, TimeSpan elapsedTime)
     {
-        List<string> hyperlinks = [];
-
-        await foreach (var result in results)
-        {
-            hyperlinks.Add(result);
-        }
-
         logger.LogStopwatchInformation(elapsedTime);
 
         List<string> uniqueHyperlinks = [.. hyperlinks.Distinct().Order()];
 
         coreService.Summary.AddNewLine();
         coreService.Summary.AddMarkdownHeading($"{configuration.Tool}", level: 3);
-        coreService.Summary.AddNewLine();
-        coreService.Summary.AddRawMarkdown($"The following unique absolute hyperlinks were found in the markdown files:");
-        coreService.Summary.AddNewLine();
-        coreService.Summary.AddNewLine();
-        coreService.Summary.AddMarkdownList(uniqueHyperlinks, ordered: true);
+        if (configuration.OutputHyperlinks)
+        {
+            coreService.Summary.AddNewLine();
+            coreService.Summary.AddRawMarkdown($"The following unique absolute hyperlinks were found in the markdown files:");
+            coreService.Summary.AddNewLine();
+            coreService.Summary.AddNewLine();
+            coreService.Summary.AddMarkdownList(uniqueHyperlinks, ordered: true);
+        }
         coreService.Summary.AddNewLine();
         coreService.Summary.AddMarkdownQuote($"Total hyperlinks: {hyperlinks.Count}");
         coreService.Summary.AddMarkdownQuote($"Unique hyperlinks: {uniqueHyperlinks.Count}");

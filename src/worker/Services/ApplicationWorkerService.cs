@@ -11,14 +11,15 @@ internal sealed class ApplicationWorkerService(
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        Stopwatch stopwatch = Stopwatch.StartNew();
-
         logger.LogWorkerRunning();
 
-        IAsyncEnumerable<string> hyperlinks = searchService.GetHyperlinksAsync();
-
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        List<string> hyperlinks = [];
+        await foreach (string hyperlink in searchService.GetHyperlinksAsync())
+        {
+            hyperlinks.Add(hyperlink);
+        }
         stopwatch.Stop();
-
         await resultsService.SaveResultsAsync(hyperlinks, stopwatch.Elapsed);
 
         applicationLifetime.StopApplication();

@@ -5,4 +5,6 @@ internal sealed record Configuration
     public required string Path { get; init; }
 
     public required Tool Tool { get; init; }
+
+    public required bool OutputHyperlinks { get; init; }
 }
