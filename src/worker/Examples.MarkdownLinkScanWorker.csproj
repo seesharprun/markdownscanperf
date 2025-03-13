@@ -9,6 +9,7 @@
     <PackageReference Include="Humanizer" />
     <PackageReference Include="Markdig" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Pathological.Globbing" />
     <PackageReference Include="System.CommandLine" />
   </ItemGroup>
 </Project>

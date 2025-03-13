@@ -5,17 +5,54 @@ internal sealed class RegexScanService(
     Configuration configuration
 ) : IScanService
 {
+    private readonly Regex regex = RegexScanServiceExtensions.ContentSearchPattern();
+
+    private readonly GlobOptions globOptions = new GlobOptionsBuilder()
+        .WithBasePath(configuration.Path)
+        .WithPattern("**/*.md")
+        .WithIgnorePattern(".git")
+        .Build();
+
     public async IAsyncEnumerable<string> GetHyperlinksAsync()
     {
         logger.LogMarkdigScanStarted(configuration.Path);
 
-        await Task.CompletedTask;
+        IAsyncEnumerable<FileInfo> files = globOptions.GetMatchingFileInfosAsync();
 
-        foreach (var link in new string[] { "https://learn.microsoft.com/dotnet/standard/base-types/regular-expressions" })
+        ConcurrentBag<string> content = [];
+
+        await Parallel.ForEachAsync(files, async (file, cancellationToken) =>
         {
-            yield return link;
+            var text = await File.ReadAllTextAsync(file.FullName, cancellationToken);
+            content.Add(text);
+        });
+
+        ConcurrentBag<string> hyperlinks = [];
+
+        Parallel.ForEach(content, (string content) =>
+        {
+            var matches = regex.Matches(content);
+
+            foreach (Match match in matches)
+            {
+                hyperlinks.Add(match.Value.ToLower());
+            }
+        });
+
+        foreach (string match in hyperlinks)
+        {
+            yield return match;
         }
     }
+}
+
+internal static partial class RegexScanServiceExtensions
+{
+    [GeneratedRegex(
+        pattern: @"http[s]?://[\/\w\d_.\-]+",
+        options: RegexOptions.IgnoreCase,
+        cultureName: "en-US")]
+    public static partial Regex ContentSearchPattern();
 }
 
 internal static partial class Logging
