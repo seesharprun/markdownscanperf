@@ -22,11 +22,13 @@ internal sealed class MarkdownResultsService(
 
         logger.LogHyperlinks($"{string.Join(Environment.NewLine, $"- {hyperlinks}")}");
 
-        coreService.Summary.AddMarkdownSeparator();
-        coreService.Summary.AddMarkdownHeading($"{configuration.Tool} - {configuration.Path}", level: 3);
-        coreService.Summary.AddRawMarkdown("The following hyperlinks were found in the markdown files:");
+        coreService.Summary.AddMarkdownHeading($"{configuration.Tool}", level: 3);
+        coreService.Summary.AddNewLine();
+        coreService.Summary.AddRawMarkdown($"The following hyperlinks were found in the markdown files:");
+        coreService.Summary.AddNewLine();
         coreService.Summary.AddMarkdownList(hyperlinks, ordered: true);
-        coreService.Summary.AddMarkdownQuote("Elapsed time: {Elapsed:c}");
+        coreService.Summary.AddNewLine();
+        coreService.Summary.AddMarkdownQuote($"Elapsed time: {elapsedTime:c}");
 
         await coreService.Summary.WriteAsync();
     }
