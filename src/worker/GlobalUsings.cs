@@ -1,5 +1,8 @@
-global using Actions.Core;
+global using Actions.Core.Services;
+global using Actions.Core.Summaries;
 global using Actions.Core.Extensions;
+
+global using Humanizer;
 
 global using System.CommandLine;
 

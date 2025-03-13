@@ -3,12 +3,12 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>bc2bd93b-9dca-4936-b589-1e727f55cf16</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="GitHub.Actions.Core" Version="9.0.0" />
-    <PackageReference Include="Markdig" Version="0.40.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="GitHub.Actions.Core" />
+    <PackageReference Include="Humanizer" />
+    <PackageReference Include="Markdig" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="System.CommandLine" />
   </ItemGroup>
 </Project>
