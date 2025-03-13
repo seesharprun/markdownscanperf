@@ -18,20 +18,23 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      TARGET_REPOSITORY: ${{ github.event.inputs.target-repository || 'microsoftdocs/data-api-builder-docs' }}
+      OUTPUT_HYPERLINKS: ${{ github.event.inputs.output-hyperlinks || false }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
-      - name: Checkout target repository [${{ github.event.inputs.target-repository || 'microsoftdocs/data-api-builder-docs' }}]
+      - name: Checkout target repository [${{ env.TARGET_REPOSITORY}}]
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.event.inputs.target-repository || 'microsoftdocs/data-api-builder-docs' }}
+          repository: ${{ env.TARGET_REPOSITORY}}
           path: target-repository
       - name: Write summary header
         run: |
           {
             echo "## Measurement summary :chart_with_upwards_trend:"
             echo " "
-            echo "Here's a summary of the hyperlink scan results"
+            echo "Here's a summary of the hyperlink scan results for ${{ env.TARGET_REPOSITORY}}"
             echo " " 
           } >> $GITHUB_STEP_SUMMARY
       - name: Run hyperlink scanner
@@ -39,10 +42,10 @@ jobs:
         with:
           path: ./target-repository
           tool: markdig
-          outputHyperlinks: ${{ github.event.inputs.output-hyperlinks || false }}
+          outputHyperlinks: ${{ env.OUTPUT_HYPERLINKS }}
       - name: Run hyperlink scanner
         uses: ./
         with:
           path: ./target-repository
           tool: regex
-          outputHyperlinks: ${{ github.event.inputs.output-hyperlinks || false }}
+          outputHyperlinks: ${{ env.OUTPUT_HYPERLINKS }}
