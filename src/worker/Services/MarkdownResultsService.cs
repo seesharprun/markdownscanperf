@@ -27,6 +27,8 @@ internal sealed class MarkdownResultsService(
         coreService.Summary.AddRawMarkdown("The following hyperlinks were found in the markdown files:");
         coreService.Summary.AddMarkdownList(hyperlinks, ordered: true);
         coreService.Summary.AddMarkdownQuote("Elapsed time: {Elapsed:c}");
+
+        await coreService.Summary.WriteAsync();
     }
 }
 

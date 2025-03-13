@@ -21,6 +21,9 @@ jobs:
         with:
           repository: ${{ github.event.inputs.target-repository || 'microsoftdocs/data-api-builder-docs' }}
           path: target-repository
+      - name: Write summary header
+        run: |
+          echo "## Measurement summary :chart_with_upwards_trend:\n\nHere's a summary of the hyperlink scan results\n" >> $GITHUB_STEP_SUMMARY
       - name: Run hyperlink scanner
         uses: ./
         with:
